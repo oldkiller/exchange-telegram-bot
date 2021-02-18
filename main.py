@@ -124,7 +124,11 @@ def visualize_history(history: dict, msg_data: dict) -> str:
 
 @bot.message_handler(commands=["list", "lst"])
 def send_rates_list(msg):
-	rates = get_rates_list("USD")
+	try:
+		rates = get_rates_list("USD")
+	except ConnectionError:
+		bot.send_message(msg.chat.id, "Server unavailable")
+		return
 
 	reply_text = ""
 	for key in rates:
@@ -138,7 +142,13 @@ def send_converted_currency(msg):
 	msg_text = msg.text.split(" ", 1)[1]
 
 	msg_data = extract_exchange_data(msg_text)
-	rates = get_rates_list("USD")
+
+	try:
+		rates = get_rates_list("USD")
+	except ConnectionError:
+		bot.send_message(msg.chat.id, "Server unavailable")
+		return
+
 	result = convert_currency(rates, msg_data)
 
 	reply_text = "{} {}".format(result["value"], result["currency"])
@@ -172,7 +182,7 @@ def send_history(msg):
 	# Send user graph, if available
 	try:
 		photo = open(filename, "rb")
-	except:
+	except FileNotFoundError:
 		bot.send_message(msg.chat.id, "Failed to send image")
 	else:
 		bot.send_photo(msg.chat.id, photo)
