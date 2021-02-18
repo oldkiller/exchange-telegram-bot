@@ -66,8 +66,9 @@ def convert_currency(rates: dict, currency_to_convert: dict) -> dict:
 
 
 def extract_history_data(msg_text: str) -> dict:
-	result_two_currency = re.search(r"[A-Z]{3}/[A-Z]{3}", msg_text).group(0)
+	result_two_currency = re.search(r"[A-Z]{3}/[A-Z]{3}", msg_text)
 	if result_two_currency:
+		result_two_currency = result_two_currency.group(0)
 		base, second = result_two_currency.split("/")
 	else:
 		result_second_currency = re.search(r"[A-Z]{3}", msg_text).group(0)
