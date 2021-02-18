@@ -1,0 +1,5 @@
+matplotlib
+requests
+python-dotenv
+peewee
+pyTelegramBotAPI
